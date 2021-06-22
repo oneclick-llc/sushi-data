@@ -187,8 +187,6 @@ module.exports = {
         if (pairs_token1.length > 0){
             pairs_list.push.apply(pairs_list,pairs_token1);
         }
-
-        console.log("Results: ",pairs_list);
         return pairs.callback(pairs_list)
     },
 

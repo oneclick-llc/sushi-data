@@ -138,7 +138,7 @@ module.exports = {
         };
     },
 
-    async pairs(base_token) {
+    async pairs(base_token,reserveUSD) {
         let pairs_list = [];
         let pairs_token0 = await pageResults({
             api: graphAPIEndpoints.exchange,
@@ -147,7 +147,7 @@ module.exports = {
                 selection: {
                     where: {
                         token0: `\\"${base_token.toLowerCase()}\\"`,
-                        reserveUSD_gt: 10000
+                        reserveUSD_gt: reserveUSD
                       },
                       orderBy:'reserveUSD',
                       orderDirection:'desc'

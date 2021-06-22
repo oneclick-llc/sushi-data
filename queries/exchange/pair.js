@@ -138,39 +138,58 @@ module.exports = {
         };
     },
 
-    async pairs({block = undefined, timestamp = undefined, max = undefined, pair_addresses = undefined} = {}) {
-        if(pair_addresses) {
-            
-            block = block ? block : timestamp ? (await timestampToBlock(timestamp)) : undefined;
-            block = block ? `block: { number: ${block} }` : "";
-
-            const query = (
-                gql`{
-                    ${pair_addresses.map((pair, i) => (`
-                        pair${i}: pair(id: "${pair.toLowerCase()}", ${block}) {
-                            ${pairs.properties.toString()}
-                    }`))}
-                }`
-            );
-
-            const result = Object.values(await request(graphAPIEndpoints.exchange, query));
-
-            return pairs.callback(result);
-        }
-        
-        return pageResults({
+    async pairs(base_token) {
+        let pairs_list = [];
+        let pairs_token0 = await pageResults({
             api: graphAPIEndpoints.exchange,
             query: {
                 entity: 'pairs',
                 selection: {
-                    block: block ? { number: block } : timestamp ? { number: await timestampToBlock(timestamp) } : undefined,
+                    where: {
+                        token0: `\\"${base_token.toLowerCase()}\\"`,
+                        reserveUSD_gt: 10000
+                      },
+                      orderBy:'reserveUSD',
+                      orderDirection:'desc'
                 },
                 properties: pairs.properties
             },
-            max
         })
-            .then(results => pairs.callback(results))
+            .then(results => { 
+                return results
+            })
             .catch(err => console.log(err));
+
+        let pairs_token1 = await pageResults({
+            api: graphAPIEndpoints.exchange,
+            query: {
+                entity: 'pairs',
+                selection: {
+                    where: {
+                        token1: `\\"${base_token.toLowerCase()}\\"`,
+                        reserveUSD_gt: 10000
+                      },
+                      orderBy:'reserveUSD',
+                      orderDirection:'desc'
+                },
+                properties: pairs.properties
+            },
+        })
+            .then(results => {  
+                return results
+            })
+            .catch(err => console.log(err));
+
+        if (pairs_token0.length > 0){
+            pairs_list.push.apply(pairs_list,pairs_token0);
+        }
+
+        if (pairs_token1.length > 0){
+            pairs_list.push.apply(pairs_list,pairs_token1);
+        }
+
+        console.log("Results: ",pairs_list);
+        return pairs.callback(pairs_list)
     },
 
     async pairs24h({block = undefined, timestamp = undefined, max = undefined} = {}) {

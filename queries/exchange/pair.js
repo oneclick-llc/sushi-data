@@ -139,55 +139,47 @@ module.exports = {
     },
 
     async pairs(base_token,reserveUSD) {
+        let conditions = [
+                {
+                    token0: `\\"${base_token.toLowerCase()}\\"`,
+                    reserveUSD_gt: reserveUSD
+                },{
+                    token1: `\\"${base_token.toLowerCase()}\\"`,
+                    reserveUSD_gt: reserveUSD
+                }
+            ];
+        let promises = [];
         let pairs_list = [];
-        let pairs_token0 = await pageResults({
-            api: graphAPIEndpoints.exchange,
-            query: {
-                entity: 'pairs',
-                selection: {
-                    where: {
-                        token0: `\\"${base_token.toLowerCase()}\\"`,
-                        reserveUSD_gt: reserveUSD
-                      },
-                      orderBy:'reserveUSD',
-                      orderDirection:'desc'
-                },
-                properties: pairs.properties
-            },
+
+        conditions.forEach(condition => {
+            promises.push(
+                pageResults({
+                    api: graphAPIEndpoints.exchange,
+                    timeout: 15e3,
+                    query: {
+                        entity: 'pairs',
+                        selection: {
+                            where: condition,
+                              orderBy:'reserveUSD',
+                              orderDirection:'desc'
+                        },
+                        properties: pairs.properties
+                    },
+                })
+                    .then(results => { 
+                        if (results.length > 0){
+                            pairs_list.push.apply(pairs_list,results);
+                        } 
+                    })
+                )
         })
-            .then(results => { 
-                return results
-            })
-            .catch(err => console.log(err));
 
-        let pairs_token1 = await pageResults({
-            api: graphAPIEndpoints.exchange,
-            query: {
-                entity: 'pairs',
-                selection: {
-                    where: {
-                        token1: `\\"${base_token.toLowerCase()}\\"`,
-                        reserveUSD_gt: 10000
-                      },
-                      orderBy:'reserveUSD',
-                      orderDirection:'desc'
-                },
-                properties: pairs.properties
-            },
-        })
-            .then(results => {  
-                return results
-            })
-            .catch(err => console.log(err));
+        let resusts_return = await Promise.all(promises)
+            .then(responses => {
+                return responses;
+            });
 
-        if (pairs_token0.length > 0){
-            pairs_list.push.apply(pairs_list,pairs_token0);
-        }
-
-        if (pairs_token1.length > 0){
-            pairs_list.push.apply(pairs_list,pairs_token1);
-        }
-        return pairs.callback(pairs_list)
+        return pairs.callback(pairs_list);
     },
 
     async pairs24h({block = undefined, timestamp = undefined, max = undefined} = {}) {

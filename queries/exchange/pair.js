@@ -155,7 +155,7 @@ module.exports = {
             promises.push(
                 pageResults({
                     api: graphAPIEndpoints.exchange,
-                    timeout: 15e3,
+                    timeout: 30e3,
                     query: {
                         entity: 'pairs',
                         selection: {

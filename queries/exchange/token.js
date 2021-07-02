@@ -154,7 +154,7 @@ module.exports = {
             .catch(err => console.log(err));
     },
 
-    async investedPortTokens({ user_address = undefined, max = undefined} = {}) {
+    async investedPortTokens(user_address,max) {
 
         let condition ={
                     address: user_address

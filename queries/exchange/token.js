@@ -157,7 +157,7 @@ module.exports = {
     async investedPortTokens(user_address,max) {
 
         let condition ={
-                    address: user_address
+                    address: `\\"${user_address.toLowerCase()}\\"`
                 }
   
 

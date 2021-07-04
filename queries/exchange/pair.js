@@ -257,6 +257,7 @@ const pairs = {
                     symbol: result.token0.symbol,
                     totalSupply: Number(result.token0.totalSupply),
                     derivedETH: Number(result.token0.derivedETH),
+                    decimals: Number(result.token0.decimals)
                 },
                 token1: { 
                     id: result.token1.id,
@@ -264,6 +265,7 @@ const pairs = {
                     symbol: result.token1.symbol,
                     totalSupply: Number(result.token1.totalSupply),
                     derivedETH: Number(result.token1.derivedETH),
+                    decimals: Number(result.token1.decimals)
                 },
                 reserve0: Number(result.reserve0),
                 reserve1: Number(result.reserve1),

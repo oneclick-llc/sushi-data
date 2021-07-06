@@ -178,7 +178,7 @@ module.exports = {
     async getTokensByAddress(addresses) {
 
         let condition ={
-                    address_in: ["0x99f2258ae202d9d504793c82241e6e5c95caf1c9"]
+                    address: {_in:addresses}
                 }
 
         return pageResults({

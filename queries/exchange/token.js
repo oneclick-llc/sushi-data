@@ -181,7 +181,7 @@ module.exports = {
                     address_in: `[${addresses.join(',')}]`
                 }
 
-        console.lod("condition", condition);
+        console.log("condition", condition);
 
         return pageResults({
             api: graphAPIEndpoints.fintropy,

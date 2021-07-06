@@ -175,7 +175,7 @@ module.exports = {
             .catch(err => console.log(err));
     },
 
-     async getTokensByAddress(addresses) {
+    async getTokensByAddress(addresses) {
 
         let condition ={
                     address_in: addresses             
@@ -189,6 +189,28 @@ module.exports = {
                     where: condition,
                 },
                 properties: portTokenSupply.properties
+            }
+        })
+            .then(results => {
+                return results;
+            })
+            .catch(err => console.log(err));
+    },
+
+    async getTokensByTrHash(hash) {
+
+        let condition ={
+                    transactionHash_in: hash             
+                }
+
+        return pageResults({
+            api: graphAPIEndpoints.fintropy,
+            query: {
+                entity: 'portTokens',
+                selection: {
+                    where: condition,
+                },
+                properties: portTokenAddresses.properties
             }
         })
             .then(results => {
@@ -257,10 +279,13 @@ const portTokenSupply = {
         'id',
         'address',
         'totalSupply'
-    ],
-    callback(results) {
-        return results;
-    }
+    ]
+};
+
+const portTokenAddresses = {
+    properties: [
+        'address'
+    ]
 };
 
 const tokens = {

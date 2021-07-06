@@ -178,10 +178,8 @@ module.exports = {
     async getTokensByAddress(addresses) {
 
         let condition ={
-                    address_in: addresses.join(",")
+                    address_in: addresses
                 }
-  
-        console.log("condition: ", condition);
 
         return pageResults({
             api: graphAPIEndpoints.fintropy,

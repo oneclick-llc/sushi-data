@@ -178,7 +178,7 @@ module.exports = {
      async getTokensByAddress(addresses) {
 
         let condition ={
-                    address_in: JSON.stringify(addresses).replaceAll('"', '\\"')
+                    address_in: addresses             
                 }
 
         return pageResults({

@@ -179,7 +179,7 @@ module.exports = {
     async getTokensByAddress(addresses) {
 
         let condition ={
-                    address_in: `\\"${addresses}\\"`
+                    address_in: addresses
                 }
   
                 

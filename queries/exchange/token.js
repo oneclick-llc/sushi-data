@@ -158,8 +158,7 @@ module.exports = {
 
         let condition ={
                     address: `\\"${user_address.toLowerCase()}\\"`
-                }
-  
+                }   
 
         return pageResults({
             api: graphAPIEndpoints.fintropy,
@@ -179,10 +178,11 @@ module.exports = {
     async getTokensByAddress(addresses) {
 
         let condition ={
-                    address_in: addresses
+                    address_in: addresses.join(",")
                 }
   
-                
+        console.log("condition: ", condition);
+
         return pageResults({
             api: graphAPIEndpoints.fintropy,
             query: {

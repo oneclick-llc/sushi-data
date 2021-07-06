@@ -176,6 +176,27 @@ module.exports = {
             .catch(err => console.log(err));
     },
 
+    async getTokensByAddress(addresses) {
+
+        let condition ={
+                    address_in: `\\"${addresses}\\"`
+                }
+  
+                
+        return pageResults({
+            api: graphAPIEndpoints.fintropy,
+            query: {
+                entity: 'portTokens',
+                selection: {
+                    where: condition,
+                },
+                properties: portTokenSupply.properties
+            }
+        })
+            .then(results => portTokenSupply.callback(results))
+            .catch(err => console.log(err));
+    },
+
     async tokens24h({block = undefined, timestamp = undefined, max = undefined} = {}) {
         let timestampNow = timestamp ? timestamp : block ? await blockToTimestamp(block) : (Math.floor(Date.now() / 1000));
         timestamp24ago = timestampNow - TWENTY_FOUR_HOURS;
@@ -225,6 +246,17 @@ const investAccounts = {
         'id',
         'address',
         'balances {amount, token { id, address, name}}'
+    ],
+    callback(results) {
+        return results;
+    }
+};
+
+const portTokenSupply = {
+    properties: [
+        'id',
+        'address',
+        'totalSupply'
     ],
     callback(results) {
         return results;

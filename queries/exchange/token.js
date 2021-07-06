@@ -175,13 +175,11 @@ module.exports = {
             .catch(err => console.log(err));
     },
 
-    async getTokensByAddress(addresses) {
+     async getTokensByAddress(addresses) {
 
         let condition ={
-                    address_in: `[${addresses.join(',')}]`
+                    address_in: JSON.stringify(addresses).replaceAll('"', '\\"')
                 }
-
-        console.log("condition", condition);
 
         return pageResults({
             api: graphAPIEndpoints.fintropy,
@@ -193,7 +191,9 @@ module.exports = {
                 properties: portTokenSupply.properties
             }
         })
-            .then(results => portTokenSupply.callback(results))
+            .then(results => {
+                return results;
+            })
             .catch(err => console.log(err));
     },
 

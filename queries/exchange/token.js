@@ -284,6 +284,7 @@ const portTokenSupply = {
 
 const portTokenAddresses = {
     properties: [
+        'id',
         'address',
         'transactionHash'
     ]

@@ -171,7 +171,9 @@ module.exports = {
             },
             max
         })
-            .then(results => investAccounts.callback(results))
+            .then(results => {
+                return results
+            })
             .catch(err => console.log(err));
     },
 
